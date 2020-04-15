@@ -7,8 +7,11 @@ const userRouter = require('./routs/userRouter');
 const app = express();
 
 //1) MIDDLEWARE
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+  app.use(morgan('dev'));
+}
 app.use(express.json()); // data from the body will be added req object
+app.use(express.static(`${__dirname}/public`));
 
 app.use((res, req, next) => {
   console.log('Hello middle 🥩');
