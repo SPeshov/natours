@@ -1,59 +1,30 @@
-const fs = require('fs');
 const express = require('express');
+const morgan = require('morgan');
+
+const tourRouter = require('./routs/tourRoutes');
+const userRouter = require('./routs/userRouter');
 
 const app = express();
 
-const port = 5050;
-
-//simple middleware
+//1) MIDDLEWARE
+app.use(morgan('dev'));
 app.use(express.json()); // data from the body will be added req object
 
-// app.get('/', (req, res) => {
-//   res.status(200).json({ message: 'hohoho', app: 'notorus' });
-// });
-
-// app.post('/', (req, res) => {
-//   res.send('you can post');
-// });
-
-const tours = JSON.parse(
-  fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
-);
-
-app.get('/api/v1/tours', (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'success', results: tours.length, data: { tours } });
+app.use((res, req, next) => {
+  console.log('Hello middle 🥩');
+  next();
 });
 
-app.get('/api/v1/tours/:id', (req, res) => {
-  console.log(req.params);
-
-  const tour = tours.find((el) => el.id === Number(req.params.id));
-
-  if (!tour) {
-    res.status(404).json({ status: 'Fail', message: 'invalid id' });
-  }
-  res
-    .status(200)
-    .json({ status: 'success', results: 1, data: { tours: tour } });
+app.use((res, req, next) => {
+  req.requestTime = new Date().toISOString();
+  console.log('req.requestTime', req.requestTime);
+  next();
 });
 
-app.post('/api/v1/tours', (req, res) => {
-  const tourId = Number(tours[tours.length - 1].id) + 1;
-  const newTour = Object.assign({ id: tourId }, req.body);
+// 3) ROUTES
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/tours', tourRouter);
 
-  tours.push(newTour);
+// 4) START SERVER
 
-  fs.writeFile(
-    `${__dirname}/dev-data/data/tours-simple.json`,
-    JSON.stringify(tours),
-    (err) => {
-      res.status(201).json({ status: 'success', data: { tour: newTour } });
-    }
-  );
-});
-
-app.listen(port, () => {
-  console.log(`App runs on ${port} port`);
-});
+module.exports = app;
