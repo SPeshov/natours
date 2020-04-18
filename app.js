@@ -1,10 +1,13 @@
 const express = require('express');
 const morgan = require('morgan');
+const mquery = require('express-mquery');
 
 const tourRouter = require('./routs/tourRoutes');
 const userRouter = require('./routs/userRouter');
 
 const app = express();
+
+app.use(mquery());
 
 //1) MIDDLEWARE
 if (process.env.NODE_ENV === 'development') {
