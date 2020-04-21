@@ -17,11 +17,6 @@ app.use(express.json()); // data from the body will be added req object
 app.use(express.static(`${__dirname}/public`));
 
 app.use((res, req, next) => {
-  console.log('Hello middle 🥩');
-  next();
-});
-
-app.use((res, req, next) => {
   req.requestTime = new Date().toISOString();
   console.log('req.requestTime', req.requestTime);
   next();
@@ -30,6 +25,13 @@ app.use((res, req, next) => {
 // 3) ROUTES
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/tours', tourRouter);
+
+app.all('*', (req, res, next) => {
+  res.status(404).json({
+    status: 'Fail',
+    message: `Can't find ${req.originalUrl} on this server.`,
+  });
+});
 
 // 4) START SERVER
 
