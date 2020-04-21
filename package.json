@@ -9,7 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
-    "start:prod": "NODE_ENV=production node server.js"
+    "start:prod": "NODE_ENV=production node server.js",
+    "debug": "ndb server.js"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,11 @@
     "mongoose": "^5.9.9",
     "mongoose-rest-actions": "^0.29.20",
     "morgan": "^1.10.0",
-    "prettier": "^2.0.4"
+    "prettier": "^2.0.4",
+    "slugify": "^1.4.0",
+    "validator": "^13.0.0"
+  },
+  "devDependencies": {
+    "ndb": "^1.1.5"
   }
 }
