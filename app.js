@@ -18,9 +18,11 @@ if (process.env.NODE_ENV === 'development') {
 app.use(express.json()); // data from the body will be added req object
 app.use(express.static(`${__dirname}/public`));
 
-app.use((res, req, next) => {
+app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   console.log('req.requestTime', req.requestTime);
+  console.log('req.headers ...:::', req.headers);
+
   next();
 });
 

@@ -1,4 +1,5 @@
 const utils = require('./utils');
+const authController = require('./../controllers/authController');
 
 class APIFeatures {
   constructor(query, queryString) {
