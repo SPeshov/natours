@@ -42,6 +42,7 @@ const userSchema = mongoose.Schema({
       message: 'Passwords are not the same.',
     },
   },
+  active: { type: Boolean, default: true, select: false },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
@@ -103,6 +104,13 @@ userSchema.methods.createPasswordResetToken = function () {
 
   return resetToken;
 };
+
+userSchema.pre(/^find/, function (next) {
+  //this point to current query
+
+  this.find({ active: { $ne: false } });
+  next();
+});
 
 const User = mongoose.model('User', userSchema);
 module.exports = User;
