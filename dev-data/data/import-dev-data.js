@@ -2,11 +2,11 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 
-const Tour = require('./../../models/tourModel');
+const Tour = require('../../models/tourModel');
 
-dotenv.config({ path: './../../config.env' });
+dotenv.config({ path: '../../config.env' });
 
-const DB = process.env.DATABASE.replace(
+const DB = 'mongodb+srv://speshov:<PASSWORD>@cluster0-etig5.mongodb.net/natours?retryWrites=true&w=majority'.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD
 );
@@ -22,7 +22,7 @@ mongoose
     console.log('DB connection is successful 🤘');
   });
 
-const tours = JSON.parse(fs.readFileSync('tours-simple.json', 'utf-8'));
+const tours = JSON.parse(fs.readFileSync('tours.json', 'utf-8'));
 
 const importData = async () => {
   try {
