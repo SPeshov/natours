@@ -1,69 +1,17 @@
 const Tour = require('../models/tourModel');
 const catchAsync = require('../utils/catchAsync');
 
-const APIFeatures = require('../utils/apiFeatures');
 const AppError = require('../utils/appError');
 
-exports.getAllTours = catchAsync(async (req, res, next) => {
-  const apiFeatures = new APIFeatures(Tour.find(), req.query)
-    .filter()
-    .sort()
-    .limitFields()
-    .paginate();
+const Factory = require('./handlerFactory');
 
-  // execute query
-  const data = await apiFeatures.query;
+exports.getAllTours = Factory.getAll(Tour);
 
-  res.status(200).json({ status: 'success', results: data.length, data: data });
-});
+exports.getTour = Factory.getOne(Tour, 'reviews');
 
-exports.getTour = catchAsync(async (req, res, next) => {
-  const data = await Tour.findById(req.params.id).populate('reviews');
-
-  if (!data) {
-    return next(new AppError(`No tour found with that ${req.params.id}`, 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: { tours: data },
-  });
-});
-
-exports.createTour = catchAsync(async (req, res) => {
-  const newTour = await Tour.create(req.body);
-  return res.status(201).json({ status: 'success', data: { tour: newTour } });
-});
-
-exports.updateTour = catchAsync(async (req, res, next) => {
-  const data = await Tour.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
-
-  if (!data) {
-    return next(new AppError(`No tour found with that ${req.params.id}`, 404));
-  }
-
-  res.status(200).json({
-    status: 'success',
-    requestedAt: req.requestTime,
-    results: 1,
-    data: { tours: data },
-  });
-});
-
-exports.deleteTour = catchAsync(async (req, res, next) => {
-  const data = await Tour.findByIdAndDelete(req.params.id);
-
-  if (!data) {
-    return next(new AppError(`No tour found with that ${req.params.id}`, 404));
-  }
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
-});
+exports.createTour = Factory.createOne(Tour);
+exports.updateTour = Factory.updateOne(Tour);
+exports.deleteTour = Factory.deleteOne(Tour);
 
 exports.aliasTopTours = async (req, res, next) => {
   req.query = {
