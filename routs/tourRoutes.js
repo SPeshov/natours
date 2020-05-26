@@ -20,10 +20,22 @@ router.route('/top-5-tours').get(aliasTopTours, getAllTours);
 router.route('/stats').get(getTourStats);
 router.route('/monthly-plan/:year').get(getMonthlyPlan);
 
-router.route('/').get(authController.protect, getAllTours).post(createTour);
+router
+  .route('/')
+  .get(authController.protect, getAllTours)
+  .post(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide'),
+    createTour
+  );
+
 router
   .route('/:id')
-  .get(getTour)
+  .get(
+    authController.protect,
+    authController.restrictTo('admin', 'lead-guide', 'guide', 'user'),
+    getTour
+  )
   .patch(updateTour)
   .delete(authController.protect, deleteTour);
 
