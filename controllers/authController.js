@@ -126,12 +126,15 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   // GRANT USER DATA TO PROTECTED ROUTE
   req.user = currentUser;
+  console.log('currentUser:', currentUser);
   next();
 });
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {
     //roles ['admin', 'lead-tour']
+
+    console.log(roles, req.user.role);
 
     if (!roles.includes(req.user.role)) {
       return next(

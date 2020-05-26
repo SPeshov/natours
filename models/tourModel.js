@@ -168,6 +168,8 @@ tourSchema.pre('aggregate', function (next) {
 //   next();
 // });
 
+tourSchema.index({ price: 1 });
+
 const Tour = mongoose.model('Tour', tourSchema);
 
 module.exports = Tour;
