@@ -37,8 +37,8 @@ block content
         .overview-box__group
           h2.heading-secondary.ma-bt-lg Quick facts
 
-          - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
-          +overviewBox('Next date', date, 'calendar')
+          //- - const date = tour.startDates[0].toLocaleString('en-us', {month: 'long', year: 'numeric'})
+          //- +overviewBox('Next date', date, 'calendar')
           +overviewBox('Difficulty', tour.difficulty, 'trending-up')
           +overviewBox('Participants', `${tour.maxGroupSize} people`, 'user')
           +overviewBox('Rating', `${tour.ratingsAverage} / 5`, 'star')
@@ -84,4 +84,8 @@ block content
       .cta__content
         h2.heading-secondary What are you waiting for?
         p.cta__text= `${tour.duration} days. 1 adventure. Infinite memories. Make it yours today!`
-        button.btn.btn--green.span-all-rows Book tour now!
+        
+        if user
+          button.btn.btn--green.span-all-rows#book-tour(data-tour-id=`${tour.id}`) Book tour now!
+        else
+          a.btn.btn--green.span-all-rows(href='/login') Log in to book tour
